@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:aadda/Screens/ChatScreen.dart';
+import 'package:aadda/Screens/ChatListScreen.dart';
 import 'package:aadda/Screens/LoginScreen.dart';
-import 'package:aadda/SessionManagement.dart';
+import 'file:///F:/AndroidStudioProjects/Professional_proj/aadda/lib/Services/SessionManagement.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -34,8 +34,8 @@ class _SplashScreenState extends State<SplashScreen> {
       // print("test "+SessionManagement.sharedPreferences.getString(SessionManagement.USER_NAME));
 
       SessionManagement.IsLoggedIn().then((value) {
-        if (value==true)
-          Navigator.pushReplacementNamed(context, ChatScreen.ID);
+        if (value == true)
+          Navigator.pushReplacementNamed(context, ChatListScreen.ID);
         else
           Navigator.pushReplacementNamed(context, LoginScreen.ID);
       }

@@ -1,24 +1,24 @@
-import 'package:aadda/Screens/ContactList.dart';
+import 'package:aadda/Screens/SearchContacts.dart';
 import 'package:aadda/Screens/LoginScreen.dart';
-import 'package:aadda/SessionManagement.dart';
+import 'file:///F:/AndroidStudioProjects/Professional_proj/aadda/lib/Services/SessionManagement.dart';
 import 'package:flutter/material.dart';
 import '../Constants.dart';
 
-class ChatScreen extends StatefulWidget {
+class ChatListScreen extends StatefulWidget {
   static const ID = "ChatScreen";
 
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  _ChatListScreenState createState() => _ChatListScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatListScreenState extends State<ChatListScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           title: Text('AaDDa', style: HeadingTextStyle),
-          backgroundColor: Colors.grey.shade900,  //TODO: how to make it a const
+          backgroundColor: Colors.grey.shade900, //TODO: how to make it a const
           elevation: 0.0,
           actions: [
             PopupMenuButton(
@@ -40,7 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
           backgroundColor :Colors.grey.shade900,
           child: Icon(Icons.search),
           onPressed: (){
-            Navigator.pushNamed(context, ContactList.ID);
+            Navigator.pushNamed(context, SearchContacts.ID);
           },
         ),
         body: Container(

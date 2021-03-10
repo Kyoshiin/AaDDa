@@ -1,17 +1,15 @@
-
 import 'package:aadda/Components/InputField.dart';
+import 'package:aadda/Screens/ChatListScreen.dart';
 import 'package:aadda/Screens/RegScreen.dart';
-import 'package:aadda/SessionManagement.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:aadda/Screens/ChatScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:toast/toast.dart';
 
+import 'file:///F:/AndroidStudioProjects/Professional_proj/aadda/lib/Services/SessionManagement.dart';
 
 class LoginScreen extends StatelessWidget {
-
   static const ID = "LoginScreen";
   var _formKey = GlobalKey<FormState>();
   TextEditingController _emailcontroller = TextEditingController();
@@ -136,8 +134,8 @@ class LoginScreen extends StatelessWidget {
 
           //email verification
           if(userCredential.user.emailVerified){
-
-            Toast.show("Logged in", context,duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+            Toast.show("Logged in", context,
+                duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
 
             //creating sharedPref of login
             SessionManagement.createLoginSession(
@@ -145,12 +143,10 @@ class LoginScreen extends StatelessWidget {
                 uid: userCredential.user.uid,
                 email: email);
 
-            Navigator.pushReplacementNamed(context, ChatScreen.ID);
-
-          }
-          else
-            Toast.show("Verify your email ID and try again", context,duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-
+            Navigator.pushReplacementNamed(context, ChatListScreen.ID);
+          } else
+            Toast.show("Verify your email ID and try again", context,
+                duration: Toast.LENGTH_LONG, gravity: Toast.CENTER);
         }
       } on FirebaseAuthException catch (e){
         if (e.code == 'user-not-found')

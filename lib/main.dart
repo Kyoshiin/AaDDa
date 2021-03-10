@@ -1,8 +1,9 @@
-import 'package:aadda/Screens/ContactList.dart';
+import 'package:aadda/Screens/ChatListScreen.dart';
+import 'package:aadda/Screens/ConversationScreen.dart';
 import 'package:aadda/Screens/LoginScreen.dart';
 import 'package:aadda/Screens/RegScreen.dart';
+import 'package:aadda/Screens/SearchContacts.dart';
 import 'package:aadda/Screens/SplashScreen.dart';
-import 'package:aadda/Screens/ChatScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -38,11 +39,12 @@ class AaDDa extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             initialRoute: '/',
             routes: {
-              '/':(context) => SplashScreen(),
-              LoginScreen.ID:(context) =>LoginScreen(),
-              RegScreen.ID:(context) => RegScreen(),
-              ChatScreen.ID:(context) => ChatScreen(),
-              ContactList.ID:(context) => ContactList(),
+              '/': (context) => SplashScreen(),
+              LoginScreen.ID: (context) => LoginScreen(),
+              RegScreen.ID: (context) => RegScreen(),
+              ChatListScreen.ID: (context) => ChatListScreen(),
+              SearchContacts.ID: (context) => SearchContacts(),
+              ConversationScreen.ID: (context) => ConversationScreen()
             },
         );
 

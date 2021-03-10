@@ -2,7 +2,7 @@ import 'package:aadda/Components/InputField.dart';
 import 'package:aadda/Constants.dart';
 import 'package:aadda/Screens/LoginScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:aadda/SessionManagement.dart';
+import 'file:///F:/AndroidStudioProjects/Professional_proj/aadda/lib/Services/SessionManagement.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -83,6 +83,7 @@ class _RegScreenState extends State<RegScreen> {
                           validator: (value) {
                             if (value.isEmpty)
                               return 'Enter your email address';
+                            //TODO: email regrex not working
                             // else if (RegExp(
                             //         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                             //     .hasMatch(value))
@@ -225,6 +226,7 @@ class _RegScreenState extends State<RegScreen> {
   }
 
   ///Method to add user to database
+  //TODO: move it to database methods
   Future<void> addUser(BuildContext context, String docID) {
     CollectionReference users = FirebaseFirestore.instance.collection('Users');
     // CollectionReference message = users.firestore.collection('message'); // creating a collection inside
@@ -233,10 +235,10 @@ class _RegScreenState extends State<RegScreen> {
     // users.doc('E1K5F8IxFYvqS6623OU7').collection('message');
 
     users.doc(docID).set(
-    {
+        {
       'email': _emailcontroller.text,
       'username': _userNamecontroller.text,
-      'about':"",
+      'about': "Hey there! Lets have an Aadda..",
       'userphoto': ""
     }).then((value) {
 
