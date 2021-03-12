@@ -2,7 +2,6 @@ import 'package:aadda/Components/InputField.dart';
 import 'package:aadda/Constants.dart';
 import 'package:aadda/Screens/LoginScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'file:///F:/AndroidStudioProjects/Professional_proj/aadda/lib/Services/SessionManagement.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -131,18 +130,20 @@ class _RegScreenState extends State<RegScreen> {
 
                         SizedBox(height: 20),
 
-                        registering?Center(child: CircularProgressIndicator()):  //TODO: how?
-                        FlatButton(
-                          onPressed: () => registerAccount(context),
-                          height: 40,
-                          minWidth: 200,
-                          color: Colors.deepPurple,
-                          child: Text(
-                            'Register',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
+                        registering
+                            ? Center(child: CircularProgressIndicator())
+                            : FlatButton(
+                                onPressed: () => registerAccount(context),
+                                height: 40,
+                                minWidth: 200,
+                                color: Colors.deepPurple,
+                                child: Text(
+                                  'Register',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
                               side: BorderSide(
                                   width: 3, color: Colors.deepPurple)),
                         ),
@@ -202,16 +203,24 @@ class _RegScreenState extends State<RegScreen> {
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
                 email: _emailcontroller.text,
-                password: _passWordcontroller.text);
+                password: _passWordcontroller.text)
+            .then((userData) {
+          userData.user
+              .updateProfile(
+                  displayName: _userNamecontroller.text, photoURL: null)
+              .catchError(
+                  (e) => print("Failed updating profile name")); //todo: check
+        });
 
         if (userCredential != null) {
           await userCredential.user.sendEmailVerification();
-
-          // userCredential.user.sendEmailVerification([])
-          addUser(context,userCredential.user.uid); // add user to database
+          addUser(context, userCredential.user.uid); // add user to database
 
         }
       } on FirebaseAuthException catch (e) {
+        setState(() {
+          registering = false;
+        });
         if (e.code == 'weak-password')
           Toast.show("The password provided is too weak", context,
               duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
@@ -219,7 +228,7 @@ class _RegScreenState extends State<RegScreen> {
           Toast.show("The account already exits for the email", context,
               duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       } catch (e) {
-        Toast.show("Passwords are different", context,
+        Toast.show("Error $e", context,
             duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       }
     }
@@ -229,11 +238,6 @@ class _RegScreenState extends State<RegScreen> {
   //TODO: move it to database methods
   Future<void> addUser(BuildContext context, String docID) {
     CollectionReference users = FirebaseFirestore.instance.collection('Users');
-    // CollectionReference message = users.firestore.collection('message'); // creating a collection inside
-
-    // // for getting messages
-    // users.doc('E1K5F8IxFYvqS6623OU7').collection('message');
-
     users.doc(docID).set(
         {
       'email': _emailcontroller.text,

@@ -1,13 +1,13 @@
 import 'package:aadda/Components/InputField.dart';
+import 'package:aadda/Modal/UserModal.dart';
 import 'package:aadda/Screens/ChatListScreen.dart';
 import 'package:aadda/Screens/RegScreen.dart';
+import 'package:aadda/Services/SessionManagement.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:toast/toast.dart';
-
-import 'file:///F:/AndroidStudioProjects/Professional_proj/aadda/lib/Services/SessionManagement.dart';
 
 class LoginScreen extends StatelessWidget {
   static const ID = "LoginScreen";
@@ -137,13 +137,27 @@ class LoginScreen extends StatelessWidget {
             Toast.show("Logged in", context,
                 duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
 
+            // print("loggedIn username ${DataBaseMethods.getLoggedInUsername(userCredential.user.uid)}"); //todo unable to get future data
+
             //creating sharedPref of login
             SessionManagement.createLoginSession(
                 name: userCredential.user.displayName,
+                //DataBaseMethods.getLoggedInUsername(userCredential.user.uid),    //userCredential.user.displayName, //TODO get proper username
                 uid: userCredential.user.uid,
                 email: email);
 
-            Navigator.pushReplacementNamed(context, ChatListScreen.ID);
+            UserModal user = UserModal(
+                userEmail: email,
+                userName: userCredential.user.displayName,
+                userID: userCredential.user.uid,
+                userPic: '');
+
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ChatListScreen(
+                          currentUser: user,
+                        )));
           } else
             Toast.show("Verify your email ID and try again", context,
                 duration: Toast.LENGTH_LONG, gravity: Toast.CENTER);

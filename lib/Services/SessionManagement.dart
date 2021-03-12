@@ -10,7 +10,8 @@ class SessionManagement{
 
   static getCurrentUserID() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.getString(USER_ID_KEY);
+    return sharedPreferences.getString(USER_ID_KEY) ??
+        ''; // if userID not present return null
   }
 
   static createLoginSession({String name, String uid, String email}) async {
@@ -31,8 +32,20 @@ class SessionManagement{
     sharedPreferences.setString(USER_EMAIL_KEY, "");
   }
 
+  static getUserData() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> userDetails = {
+      USER_EMAIL_KEY: sharedPreferences.getString(USER_EMAIL_KEY) ?? '',
+      USER_NAME_KEY: sharedPreferences.getString(USER_NAME_KEY) ?? '',
+      USER_ID_KEY: sharedPreferences.getString(USER_ID_KEY) ?? '',
+    };
+
+    return userDetails;
+  }
+
   static Future<bool> IsLoggedIn() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getBool(IS_LOGIN)??false;
+    return sharedPreferences.getBool(IS_LOGIN) ?? false;
   }
 }
