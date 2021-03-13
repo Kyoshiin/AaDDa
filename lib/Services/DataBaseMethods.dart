@@ -1,9 +1,16 @@
-import 'package:aadda/Services/SessionManagement.dart';
+import 'package:aadda/Modal/UserModal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DataBaseMethods {
+  ///Method to get all user details
+  static getUserDetails({String userID}) async {
+    return await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(userID)
+        .get();
+  }
+
   static getUserByUsername(String username) async {
-    //todo: change to get user details
     return await FirebaseFirestore.instance
         .collection("Users")
         .where('username', isEqualTo: username)
@@ -11,65 +18,68 @@ class DataBaseMethods {
         .get(); // querying to get only the searched user name and not dwnlding all data
   }
 
-  static getLoggedInUsername(String UserID) async {
-    //todo: use it for photoes and about
-    await FirebaseFirestore.instance
-        .collection("Users")
-        .doc(UserID)
-        .get()
-        .then((documentSnapshot) {
-      print("UserName: ${documentSnapshot.data()['username'].toString()}");
-      return documentSnapshot.data()['username'].toString();
-    }).catchError((e) => print("Error fetching username"));
-  }
+  ///method to create an entry in ContactList for both the Users
 
-  ///method to create a chat in the current Users, chatlist
-  ///againts the sender's name
-  static createChat({String receiverUserID, String receiverUsername}) async {
-    SessionManagement.getCurrentUserID().then((currentUserID) {
-      FirebaseFirestore.instance
-          .collection("Users")
-          .doc(currentUserID)
-          .collection("ChatList")
-          .doc(receiverUserID)
-          .set({
-        "receiverName": receiverUsername,
-        'receiverUserID': receiverUserID
-      }).catchError((e) => print("Creating chat " + e.toString()));
-    }).catchError((e) => print("ID not available " + e.toString()));
+  static createContact({UserModal receiver, UserModal sender}) async {
+    ///creating contact for sender
+    FirebaseFirestore.instance
+        .collection("Users")
+        .doc(sender.userID)
+        .collection("ContactList")
+        .doc(receiver.userID)
+        .set({
+      "receiverName": receiver.userName,
+      'receiverUserID': receiver.userID,
+    }).catchError(
+            (e) => print("Failed creating contact for sender " + e.toString()));
+
+    ///creating contact for receiver of sender
+    FirebaseFirestore.instance
+        .collection("Users")
+        .doc(receiver.userID)
+        .collection("ContactList")
+        .doc(sender.userID)
+        .set({
+      "receiverName": sender.userName,
+      'receiverUserID': sender.userID,
+    }).catchError((e) =>
+            print("Failed creating contact for receiver " + e.toString()));
   }
 
   ///Method to start/ send conversation msgs
-  static addConversationMessages(
-      {String currentUserID, String receiverUserID, Map messageMap}) {
+  static addConversationMessages({String currentUserID, String receiverUserID, Map messageMap}) {
     FirebaseFirestore.instance
-        .collection("Users")
-        .doc(currentUserID)
-        .collection("ChatList")
-        .doc(receiverUserID)
+        .collection("Chats")
+        .doc(getChatID(currentUserID, receiverUserID))
         .collection("Chat_Messages")
         .add(messageMap)
-        .catchError((e) => print("Error getting messages " + e.toString()));
+        .catchError((e) => print("Error sending messages " + e.toString()));
   }
 
   ///Method to start/ send conversation msgs
   static getConversationMessages(
       {String currentUserID, String receiverUserID}) async {
     return await FirebaseFirestore.instance
-        .collection("Users")
-        .doc(currentUserID)
-        .collection("ChatList")
-        .doc(receiverUserID)
+        .collection("Chats")
+        .doc(getChatID(currentUserID, receiverUserID))
         .collection("Chat_Messages")
         .orderBy('time', descending: false)
         .snapshots(); // getting stream of data
   }
 
-  static getChats({String currentUserID}) async {
+  ///Method to get lists of contacts
+  static getContacts({String currentUserID}) async {
     return await FirebaseFirestore.instance
         .collection("Users")
         .doc(currentUserID)
-        .collection("ChatList")
+        .collection("ContactList")
         .snapshots(); // getting stream of data
+  }
+
+  ///Method to get chat ID based on hashcode of User IDs
+  static getChatID(String currentUserID, String receiverUserID) {
+    return currentUserID.hashCode <= receiverUserID.hashCode
+        ? '$currentUserID-$receiverUserID'
+        : '$receiverUserID-$currentUserID';
   }
 }

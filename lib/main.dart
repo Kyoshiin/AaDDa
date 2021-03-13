@@ -4,10 +4,20 @@ import 'package:aadda/Screens/RegScreen.dart';
 import 'package:aadda/Screens/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); // server attached to app
   runApp(AaDDa());
+
+  //loading dialog
+  EasyLoading.instance
+    ..indicatorType = EasyLoadingIndicatorType.wanderingCubes
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.green
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskColor = Colors.blue.withOpacity(0.5);
 }
 
 class AaDDa extends StatelessWidget {
@@ -28,11 +38,11 @@ class AaDDa extends StatelessWidget {
         if(snapshot.connectionState == ConnectionState.done)
           return MaterialApp(
             title: 'AaDDa',
+            builder: EasyLoading.init(),
             theme: ThemeData(
               primaryColor: Colors.deepPurple,
               canvasColor: Colors.black12,
               cardColor: Colors.grey.shade900,
-              cursorColor: Colors.white
             ),
             debugShowCheckedModeBanner: false,
             initialRoute: '/',

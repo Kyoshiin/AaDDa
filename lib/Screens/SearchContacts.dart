@@ -3,6 +3,7 @@ import 'package:aadda/Modal/UserModal.dart';
 import 'package:aadda/Services/DataBaseMethods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../Constants.dart';
 
@@ -55,6 +56,7 @@ class _SearchContactsState extends State<SearchContacts> {
                         //search icon
                         GestureDetector(
                           onTap: () {
+                            EasyLoading.show(status: "Searching User");
                             initSearch();
                           },
                           child: Container(
@@ -121,7 +123,7 @@ class _SearchContactsState extends State<SearchContacts> {
                     currentUser: widget.currentUser);
               }
               return Center(
-                  // if user ID same //todo: check for users wid same name
+                // if user ID same
                   child: Text(
                 "No Results Found",
                 style: BodyTextStyle,
@@ -138,6 +140,7 @@ class _SearchContactsState extends State<SearchContacts> {
   /// method to inti search and get query results
   void initSearch() {
     DataBaseMethods.getUserByUsername(searchUserController.text).then((val) {
+      EasyLoading.dismiss();
       setState(() {
         // update list after query
         searchResultSnapshot = val;

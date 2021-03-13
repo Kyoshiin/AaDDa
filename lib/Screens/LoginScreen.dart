@@ -1,19 +1,23 @@
 import 'package:aadda/Components/InputField.dart';
 import 'package:aadda/Modal/UserModal.dart';
-import 'package:aadda/Screens/ChatListScreen.dart';
 import 'package:aadda/Screens/RegScreen.dart';
+import 'package:aadda/Services/DataBaseMethods.dart';
 import 'package:aadda/Services/SessionManagement.dart';
+import 'package:aadda/Services/Utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:toast/toast.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
+import 'ContactListScreen.dart';
 
 class LoginScreen extends StatelessWidget {
   static const ID = "LoginScreen";
   var _formKey = GlobalKey<FormState>();
   TextEditingController _emailcontroller = TextEditingController();
   TextEditingController _passWordcontroller = TextEditingController();
+  UserModal currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +45,7 @@ class LoginScreen extends StatelessWidget {
                       icon: Icon(Icons.mail_outline),
                       hintText: "E-mail address",
                       validator: (value) {
-                        if (value.isEmpty)
-                          return 'Enter your email address';
+                        if (value.isEmpty) return 'Enter your email address';
 
                         // else if(RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value))
                         //   return 'Enter a valid email address';
@@ -66,9 +69,7 @@ class LoginScreen extends StatelessWidget {
                           return 'Password should be atleast 8 characters';
 
                         return null;
-
                       },
-
                     ),
 
                     SizedBox(height: 20),
@@ -83,9 +84,8 @@ class LoginScreen extends StatelessWidget {
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        side: BorderSide(width: 3, color: Colors.deepPurple)
-                      ),
+                          borderRadius: BorderRadius.circular(16),
+                          side: BorderSide(width: 3, color: Colors.deepPurple)),
                     ),
                   ],
                 ),
@@ -109,8 +109,8 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              
-              onTap: ()=> Navigator.pushReplacementNamed(context, RegScreen.ID),
+              onTap: () =>
+                  Navigator.pushReplacementNamed(context, RegScreen.ID),
             ),
           ],
         ),
@@ -119,58 +119,66 @@ class LoginScreen extends StatelessWidget {
   }
 
   /// Method to validate details
-  checkSignIn(BuildContext context) async{
+  checkSignIn(BuildContext context) async {
+    EasyLoading.show(status: 'Logging in...');
 
-    if(_formKey.currentState.validate()){
-
+    if (_formKey.currentState.validate()) {
+      print("validating");
       String email = _emailcontroller.text;
       String password = _passWordcontroller.text;
 
-      try{
-        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: email, password: password);
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
 
-        if(userCredential!=null){
-
+        if (userCredential != null) {
           //email verification
-          if(userCredential.user.emailVerified){
-            Toast.show("Logged in", context,
-                duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+          if (userCredential.user.emailVerified) {
+            DataBaseMethods.getUserDetails(
+                    userID: userCredential
+                        .user.uid) // getting logged in User details
+                .then((documentSnapshot) {
+              currentUser = UserModal(
+                  userID: userCredential.user.uid,
+                  userEmail: documentSnapshot.data()['email'].toString(),
+                  userName: documentSnapshot.data()['username'].toString(),
+                  userAbout: documentSnapshot.data()['about'].toString(),
+                  userPic: documentSnapshot.data()['userphoto'].toString());
 
-            // print("loggedIn username ${DataBaseMethods.getLoggedInUsername(userCredential.user.uid)}"); //todo unable to get future data
+              print(
+                  "UserName: ${currentUser.userName}\n UserEmail: ${currentUser.userEmail}");
 
-            //creating sharedPref of login
-            SessionManagement.createLoginSession(
-                name: userCredential.user.displayName,
-                //DataBaseMethods.getLoggedInUsername(userCredential.user.uid),    //userCredential.user.displayName, //TODO get proper username
-                uid: userCredential.user.uid,
-                email: email);
+              //creating sharedPref of login
+              SessionManagement.createLoginSession(
+                  name: currentUser.userName,
+                  uid: userCredential.user.uid,
+                  email: currentUser.userEmail);
 
-            UserModal user = UserModal(
-                userEmail: email,
-                userName: userCredential.user.displayName,
-                userID: userCredential.user.uid,
-                userPic: '');
+              Utils.showInfoDialog('Welcome ${currentUser.userName}...', true);
 
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ChatListScreen(
-                          currentUser: user,
-                        )));
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ContactListScreen(
+                            currentUser: currentUser,
+                          )));
+
+              EasyLoading.dismiss(); // todo: customise easyloading
+            }).catchError((e) =>
+                    Utils.showErrorDialog('Failed to get details', true));
           } else
-            Toast.show("Verify your email ID and try again", context,
-                duration: Toast.LENGTH_LONG, gravity: Toast.CENTER);
+            Utils.showInfoDialog('Verify your email ID and try again', true);
         }
-      } on FirebaseAuthException catch (e){
+      } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found')
-          Toast.show("No such user found", context,duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-
+          Utils.showErrorDialog('No such user found', true);
         else if (e.code == 'wrong-password')
-          Toast.show("Wrong Password", context,duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-
+          Utils.showErrorDialog('wrong-password', true);
       }
+    } else {
+      EasyLoading.showInfo("Check your inputs");
+
+      EasyLoading.dismiss();
     }
   }
 }
-

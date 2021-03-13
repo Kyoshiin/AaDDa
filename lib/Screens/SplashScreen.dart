@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:aadda/Modal/UserModal.dart';
-import 'package:aadda/Screens/ChatListScreen.dart';
 import 'package:aadda/Screens/LoginScreen.dart';
 import 'package:aadda/Services/SessionManagement.dart';
 import 'package:flutter/material.dart';
+
+import 'ContactListScreen.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -54,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ChatListScreen(
+                    builder: (context) => ContactListScreen(
                           currentUser: user,
                         ))); //TODO: LOGIN CHNAGE CHAT LIST ROUTE
           });

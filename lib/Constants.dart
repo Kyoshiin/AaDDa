@@ -8,3 +8,5 @@ const TextStyle BodyTextStyle = TextStyle(color: Colors.white, fontSize: 16);
 const Color SecondaryColour = Color(0xFF212121);
 
 const TextStyle HeadingTextStyle = TextStyle(color: Colors.white, fontSize: 24);
+
+const TextStyle MediumTextStyle = TextStyle(color: Colors.white, fontSize: 20);

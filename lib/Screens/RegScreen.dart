@@ -1,11 +1,12 @@
 import 'package:aadda/Components/InputField.dart';
 import 'package:aadda/Constants.dart';
 import 'package:aadda/Screens/LoginScreen.dart';
+import 'package:aadda/Services/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class RegScreen extends StatefulWidget {
   static const ID = "RegScreen";
@@ -16,8 +17,6 @@ class RegScreen extends StatefulWidget {
 
 class _RegScreenState extends State<RegScreen> {
   var _formKey = GlobalKey<FormState>();
-
-  bool registering = false;
 
   TextEditingController _userNamecontroller = TextEditingController();
   TextEditingController _emailcontroller = TextEditingController();
@@ -130,20 +129,20 @@ class _RegScreenState extends State<RegScreen> {
 
                         SizedBox(height: 20),
 
-                        registering
-                            ? Center(child: CircularProgressIndicator())
-                            : FlatButton(
-                                onPressed: () => registerAccount(context),
-                                height: 40,
-                                minWidth: 200,
-                                color: Colors.deepPurple,
-                                child: Text(
-                                  'Register',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
-                                ),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
+                        // registering
+                        //     ? Center(child: CircularProgressIndicator())
+                        //     :
+                        FlatButton(
+                          onPressed: () => registerAccount(context),
+                          height: 40,
+                          minWidth: 200,
+                          color: Colors.deepPurple,
+                          child: Text(
+                            'Register',
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
                               side: BorderSide(
                                   width: 3, color: Colors.deepPurple)),
                         ),
@@ -182,20 +181,17 @@ class _RegScreenState extends State<RegScreen> {
 
   ///Method to register new User to firebase
   registerAccount(BuildContext context) async {
-    //TODO: validate user name (if already exists)
     if (_formKey.currentState.validate()) {
-
-      setState(() {
-        registering = true;
-      });
+      EasyLoading.show(
+          status: "Creating account...",
+          dismissOnTap: false,
+          maskType: EasyLoadingMaskType.custom);
 
       if (_passWordcontroller.text != _confirmPassWordcontroller.text) {
-        Toast.show("Passwords are different", context,
-            duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+        EasyLoading.dismiss();
 
-        setState(() {
-          registering = false;
-        });
+        Utils.showErrorDialog("Passwords are different", true);
+
         return;
       }
 
@@ -203,14 +199,7 @@ class _RegScreenState extends State<RegScreen> {
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
                 email: _emailcontroller.text,
-                password: _passWordcontroller.text)
-            .then((userData) {
-          userData.user
-              .updateProfile(
-                  displayName: _userNamecontroller.text, photoURL: null)
-              .catchError(
-                  (e) => print("Failed updating profile name")); //todo: check
-        });
+                password: _passWordcontroller.text);
 
         if (userCredential != null) {
           await userCredential.user.sendEmailVerification();
@@ -218,19 +207,17 @@ class _RegScreenState extends State<RegScreen> {
 
         }
       } on FirebaseAuthException catch (e) {
-        setState(() {
-          registering = false;
-        });
+        EasyLoading.dismiss();
+
         if (e.code == 'weak-password')
-          Toast.show("The password provided is too weak", context,
-              duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+          Utils.showInfoDialog("The password provided is too weak", true);
         else if (e.code == 'email-already-in-use')
-          Toast.show("The account already exits for the email", context,
-              duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+          Utils.showErrorDialog("An account already exits for the email", true);
       } catch (e) {
-        Toast.show("Error $e", context,
-            duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+        Utils.showErrorDialog("Error registering user", true);
       }
+    } else {
+      EasyLoading.showInfo("Check your inputs");
     }
   }
 
@@ -238,21 +225,16 @@ class _RegScreenState extends State<RegScreen> {
   //TODO: move it to database methods
   Future<void> addUser(BuildContext context, String docID) {
     CollectionReference users = FirebaseFirestore.instance.collection('Users');
-    users.doc(docID).set(
-        {
+    users.doc(docID).set({
       'email': _emailcontroller.text,
       'username': _userNamecontroller.text,
       'about': "Hey there! Lets have an Aadda..",
       'userphoto': ""
     }).then((value) {
+      EasyLoading.dismiss();
+      Utils.showInfoDialog("Successfully Registered", true);
 
-      Toast.show("Registered Successfully", context,
-          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-      setState(() {
-        registering = false;
-      });
-        Navigator.pushReplacementNamed(context, LoginScreen.ID);
-
+      Navigator.pushReplacementNamed(context, LoginScreen.ID);
     }).catchError((error) => print('Error creating the database'));
   }
 }

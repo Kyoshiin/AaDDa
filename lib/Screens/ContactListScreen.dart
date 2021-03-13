@@ -1,3 +1,4 @@
+import 'package:aadda/Components/ContactsTile.dart';
 import 'package:aadda/Modal/UserModal.dart';
 import 'package:aadda/Screens/LoginScreen.dart';
 import 'package:aadda/Screens/SearchContacts.dart';
@@ -8,36 +9,41 @@ import 'file:///F:/AndroidStudioProjects/Professional_proj/aadda/lib/Services/Se
 
 import '../Constants.dart';
 
-class ChatListScreen extends StatefulWidget {
-  static const ID = "ChatScreen";
+class ContactListScreen extends StatefulWidget {
+  static const ID = "ContactListScreen";
 
   UserModal currentUser;
 
-  ChatListScreen({this.currentUser});
+  ContactListScreen({this.currentUser});
 
   @override
-  _ChatListScreenState createState() => _ChatListScreenState();
+  _ContactListScreenState createState() => _ContactListScreenState();
 }
 
-class _ChatListScreenState extends State<ChatListScreen> {
+class _ContactListScreenState extends State<ContactListScreen> {
   Stream chatsStream;
 
   Widget chatsList() {
     return StreamBuilder(
       stream: chatsStream,
       builder: (context, snapshot) {
-        print(
-            "USerName: ${widget.currentUser.userID}, ${widget.currentUser.userName}");
-
         return snapshot.hasData
             ? ListView.builder(
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
                   print(
                       "receiverName ${snapshot.data.docs[index].data()['receiverName']}");
-                  return ChatsTile(
-                      receiverUserName:
+
+                  UserModal receiver = UserModal(
+                      userID:
+                          snapshot.data.docs[index].data()['receiverUserID'],
+                      userName:
                           snapshot.data.docs[index].data()['receiverName']);
+
+                  return ContactsTile(
+                    receiverUser: receiver,
+                    currentUser: widget.currentUser,
+                  );
                 })
             : Container();
       },
@@ -46,7 +52,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
   @override
   void initState() {
-    DataBaseMethods.getChats(currentUserID: widget.currentUser.userID)
+    DataBaseMethods.getContacts(currentUserID: widget.currentUser.userID)
         .then((value) {
       setState(() {
         chatsStream = value;
@@ -64,7 +70,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
         elevation: 0.0,
         actions: [
           PopupMenuButton(
-              //TODO: HOW?
+            //TODO: HOW?
               onSelected: handleClick,
               itemBuilder: (context) {
                 return {'Profile', 'Logout'}.map((String choice) {
@@ -86,8 +92,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
               context,
               MaterialPageRoute(
                   builder: (context) => SearchContacts(
-                        currentUser: widget.currentUser,
-                      ))); // widget -> cuz in state class
+                    currentUser: widget.currentUser,
+                  ))); // widget -> cuz in state class
         },
       ),
       body: chatsList(),
@@ -103,48 +109,5 @@ class _ChatListScreenState extends State<ChatListScreen> {
           Navigator.pushReplacementNamed(context, LoginScreen.ID);
         });
     }
-  }
-}
-
-class ChatsTile extends StatelessWidget {
-  final String receiverUserName;
-
-  //TODO: implement get UserDetails via userID
-
-  ChatsTile({this.receiverUserName});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        //todo : move to Conversation Screen
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          children: [
-            Container(
-              height: 50,
-              width: 50,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  color: Colors.blue.shade700,
-                  borderRadius: BorderRadius.circular(40)),
-              child: Text(
-                receiverUserName.substring(0, 1).toUpperCase(),
-                style: BodyTextStyle.copyWith(fontSize: 20),
-              ),
-            ),
-            SizedBox(
-              width: 8,
-            ),
-            Text(
-              receiverUserName,
-              style: BodyTextStyle,
-            )
-          ],
-        ),
-      ),
-    );
   }
 }
