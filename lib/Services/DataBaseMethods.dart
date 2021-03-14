@@ -72,11 +72,18 @@ class DataBaseMethods {
   }
 
   ///Method to get lists of contacts
-  static getContacts({String currentUserID}) async {
+  // static getContacts({String currentUserID}) async {
+  //   return await FirebaseFirestore.instance
+  //       .collection("Users")
+  //       .doc(currentUserID)
+  //       .collection("ContactList")
+  //       .snapshots(); // getting stream of data
+  // }
+
+  ///Method to get all Users available
+  static getUsers() async {
     return await FirebaseFirestore.instance
         .collection("Users")
-        .doc(currentUserID)
-        .collection("ContactList")
         .snapshots(); // getting stream of data
   }
 

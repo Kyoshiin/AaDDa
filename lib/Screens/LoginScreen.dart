@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-import 'ContactListScreen.dart';
+import 'UserListScreen.dart';
 
 class LoginScreen extends StatelessWidget {
   static const ID = "LoginScreen";
@@ -146,8 +146,7 @@ class LoginScreen extends StatelessWidget {
                   userPic: documentSnapshot.data()['userphoto'].toString());
 
               print(
-                  "UserName: ${currentUser.userName}\n UserEmail: ${currentUser.userEmail}");
-              print("about ${currentUser.userAbout}");
+                  "UserPic: ${currentUser.userPic}\n UserEmail: ${currentUser.userEmail}");
 
               //creating sharedPref of login
               SessionManagement.createLoginSession(user: currentUser);
@@ -157,7 +156,7 @@ class LoginScreen extends StatelessWidget {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ContactListScreen(
+                      builder: (context) => UserListScreen(
                             currentUser: currentUser,
                           )));
 

@@ -5,7 +5,7 @@ import 'package:aadda/Screens/LoginScreen.dart';
 import 'package:aadda/Services/SessionManagement.dart';
 import 'package:flutter/material.dart';
 
-import 'ContactListScreen.dart';
+import 'UserListScreen.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -65,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => ContactListScreen(
+                builder: (context) => UserListScreen(
                       currentUser: user,
                     )));
       else
