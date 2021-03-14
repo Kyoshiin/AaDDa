@@ -147,12 +147,10 @@ class LoginScreen extends StatelessWidget {
 
               print(
                   "UserName: ${currentUser.userName}\n UserEmail: ${currentUser.userEmail}");
+              print("about ${currentUser.userAbout}");
 
               //creating sharedPref of login
-              SessionManagement.createLoginSession(
-                  name: currentUser.userName,
-                  uid: userCredential.user.uid,
-                  email: currentUser.userEmail);
+              SessionManagement.createLoginSession(user: currentUser);
 
               Utils.showInfoDialog('Welcome ${currentUser.userName}...', true);
 

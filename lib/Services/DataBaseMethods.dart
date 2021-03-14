@@ -1,5 +1,8 @@
 import 'package:aadda/Modal/UserModal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class DataBaseMethods {
   ///Method to get all user details
@@ -47,7 +50,8 @@ class DataBaseMethods {
   }
 
   ///Method to start/ send conversation msgs
-  static addConversationMessages({String currentUserID, String receiverUserID, Map messageMap}) {
+  static addConversationMessages(
+      {String currentUserID, String receiverUserID, Map messageMap}) {
     FirebaseFirestore.instance
         .collection("Chats")
         .doc(getChatID(currentUserID, receiverUserID))
@@ -81,5 +85,45 @@ class DataBaseMethods {
     return currentUserID.hashCode <= receiverUserID.hashCode
         ? '$currentUserID-$receiverUserID'
         : '$receiverUserID-$currentUserID';
+  }
+
+  ///Method to upload image to storage
+  static uploadImagetoStorage(
+      {@required String UserID, @required var file}) async {
+    return await FirebaseStorage.instance
+        .ref("UserImages/$UserID")
+        .putFile(file)
+        .then((val) async {
+      return await getDownloadUrl(path: "UserImages/$UserID");
+    }).catchError((e) {
+      EasyLoading.showError("Failed to update profile image");
+    });
+  }
+
+  /// Url for profile image uploaded in Firebase Storage
+  static getDownloadUrl({String path}) async {
+    return await FirebaseStorage.instance
+        .ref(path)
+        .getDownloadURL()
+        .then((downloadURL) {
+      print("Image Url $downloadURL");
+      return downloadURL;
+    });
+  }
+
+  static updateUserDetails(UserModal user) async {
+    return await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(user.userID)
+        .update({
+      'username': user.userName,
+      'about': user.userAbout,
+      'userphoto': user.userPic
+    }).then((value) {
+      print("Updated");
+      return true;
+    }).catchError((e) {
+      return false;
+    });
   }
 }

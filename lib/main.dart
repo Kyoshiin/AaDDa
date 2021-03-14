@@ -12,6 +12,7 @@ void main() {
 
   //loading dialog
   EasyLoading.instance
+    ..displayDuration = Duration(seconds: 5)
     ..indicatorType = EasyLoadingIndicatorType.wanderingCubes
     ..progressColor = Colors.yellow
     ..backgroundColor = Colors.green
@@ -21,26 +22,23 @@ void main() {
 }
 
 class AaDDa extends StatelessWidget {
-
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _initialization,
-
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         // check for errors
-        if(snapshot.hasError)
-          return Text("ERROR");
+        if (snapshot.hasError) return Text("ERROR");
 
         //once complete, connection done
-        if(snapshot.connectionState == ConnectionState.done)
+        if (snapshot.connectionState == ConnectionState.done)
           return MaterialApp(
             title: 'AaDDa',
             builder: EasyLoading.init(),
             theme: ThemeData(
-              primaryColor: Colors.deepPurple,
+              primaryColor: Colors.blue,
               canvasColor: Colors.black12,
               cardColor: Colors.grey.shade900,
             ),
@@ -54,11 +52,10 @@ class AaDDa extends StatelessWidget {
               // SearchContacts.ID: (context) => SearchContacts(),
               ConversationScreen.ID: (context) => ConversationScreen()
             },
-        );
+          );
 
         return Center(child: CircularProgressIndicator());
       },
     );
   }
 }
-

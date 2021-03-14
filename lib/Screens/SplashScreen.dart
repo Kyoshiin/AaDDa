@@ -42,26 +42,34 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void startCount() async {
-    Timer(Duration(seconds: 5), () {
-      SessionManagement.IsLoggedIn().then((value) {
-        if (value == true) {
-          SessionManagement.getUserData().then((map) {
-            UserModal user = UserModal(
-                userEmail: map[SessionManagement.USER_EMAIL_KEY],
-                userName: map[SessionManagement.USER_NAME_KEY],
-                userID: map[SessionManagement.USER_ID_KEY],
-                userPic: '');
+    UserModal user;
+    bool isLoggedIn;
+    SessionManagement.IsLoggedIn().then((value) {
+      isLoggedIn = value;
+      if (value == true) {
+        SessionManagement.getUserData().then((map) {
+          user = UserModal(
+              userEmail: map[SessionManagement.USER_EMAIL_KEY],
+              userName: map[SessionManagement.USER_NAME_KEY],
+              userID: map[SessionManagement.USER_ID_KEY],
+              userAbout: map[SessionManagement.USER_ABOUT_KEY],
+              userPic: map[SessionManagement.USER_PIC_KEY]);
+          print(
+              "About ${map[SessionManagement.USER_ABOUT_KEY]}, ${map[SessionManagement.USER_EMAIL_KEY]}");
+        });
+      }
+    }).catchError((onError) => print("SplashScreen " + onError.toString()));
 
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ContactListScreen(
-                          currentUser: user,
-                        ))); //TODO: LOGIN CHNAGE CHAT LIST ROUTE
-          });
-        } else
-          Navigator.pushReplacementNamed(context, LoginScreen.ID);
-      }).catchError((onError) => print("SplashScreen " + onError.toString()));
+    Timer(Duration(seconds: 5), () {
+      if (isLoggedIn)
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ContactListScreen(
+                      currentUser: user,
+                    )));
+      else
+        Navigator.pushReplacementNamed(context, LoginScreen.ID);
     });
   }
 }

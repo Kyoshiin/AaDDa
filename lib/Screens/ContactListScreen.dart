@@ -1,6 +1,7 @@
 import 'package:aadda/Components/ContactsTile.dart';
 import 'package:aadda/Modal/UserModal.dart';
 import 'package:aadda/Screens/LoginScreen.dart';
+import 'package:aadda/Screens/ProfileScreen.dart';
 import 'package:aadda/Screens/SearchContacts.dart';
 import 'package:aadda/Services/DataBaseMethods.dart';
 import 'package:flutter/material.dart';
@@ -103,6 +104,14 @@ class _ContactListScreenState extends State<ContactListScreen> {
   ///Options for popup menu
   void handleClick(String value) {
     switch (value) {
+      case 'Profile':
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ProfileScreen(
+                      user: widget.currentUser,
+                    )));
+        break;
       case 'Logout':
         SessionManagement.logout();
         setState(() {
