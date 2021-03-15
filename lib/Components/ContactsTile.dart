@@ -14,6 +14,7 @@ class ContactsTile extends StatelessWidget {
 
   ContactsTile({this.receiverUser, this.currentUser});
 
+  //todo: add time field
   @override
   Widget build(BuildContext context) {
     return InkWell(

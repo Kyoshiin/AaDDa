@@ -1,4 +1,5 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/intl.dart';
 
 class Utils {
   //todo: customise
@@ -10,5 +11,12 @@ class Utils {
   static showInfoDialog(String message, bool cancelable) {
     EasyLoading.instance..dismissOnTap = cancelable ?? false;
     EasyLoading.showInfo(message);
+  }
+
+  static getFormattedTime(int time) {
+    String formattedTime =
+        DateFormat("h:mma").format(DateTime.fromMicrosecondsSinceEpoch(time));
+    print("Time sent ${formattedTime}");
+    return formattedTime;
   }
 }

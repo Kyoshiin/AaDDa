@@ -123,9 +123,6 @@
 //   }
 // }
 //
-// //todo: find a good way to show only contacts with their details
-//
-// //todo: if going by UserList approach, send userStream for searching, instead of calling db
 //
 // ///Implementation based on each user will have access to only the contacts he has texted {TBT}
 // // class _ContactListScreenState extends State<ContactListScreen> {

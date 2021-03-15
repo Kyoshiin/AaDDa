@@ -3,6 +3,7 @@ import 'package:aadda/Components/ProfileImageView.dart';
 import 'package:aadda/Constants.dart';
 import 'package:aadda/Model/UserModel.dart';
 import 'package:aadda/Services/DataBaseMethods.dart';
+import 'package:aadda/Services/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -48,6 +49,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
                   String msgID = snapshot.data.docs[index].id;
+                  //for message selection
                   return GestureDetector(
                     onLongPress: () {
                       // for selecting msgs
@@ -72,7 +74,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       color: (_selectedMessages.contains(msgID))
                           ? Colors.blue.withOpacity(0.5)
                           : Colors.transparent,
+
+                      //message format
                       child: MessageTile(
+                          time: Utils.getFormattedTime(
+                              snapshot.data.docs[index].data()['time']),
                           message: snapshot.data.docs[index].data()['message'],
                           isCurrentUser: // check if send by current user
                               snapshot.data.docs[index].data()['sendBy'] ==
