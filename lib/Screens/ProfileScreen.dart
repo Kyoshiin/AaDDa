@@ -42,7 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         leadingWidth: 24,
         title: Text('Profile', style: MediumTextStyle),
-        backgroundColor: Colors.grey.shade900,
+        backgroundColor: PrimaryColour,
         elevation: 0.0,
       ),
       body: SafeArea(
@@ -103,7 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           left: 92,
                           top: 90,
                           child: Material(
-                            color: Colors.blue,
+                            color: ButtonColour,
                             borderRadius: BorderRadius.circular(40),
                             child: Center(
                               child: IconButton(
@@ -164,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onPressed: () => updateUserDetails(),
                         height: 40,
                         minWidth: 200,
-                        color: AccentColour,
+                        color: ButtonColour,
                         child: Text(
                           'Update',
                           style: TextStyle(color: Colors.white, fontSize: 16),
@@ -308,7 +308,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         EasyLoading.dismiss();
 
         if (v) {
-          print("Updated");
+          print("Updated in profile");
 
           EasyLoading.showSuccess("Profile updated",
               duration: Duration(seconds: 2));

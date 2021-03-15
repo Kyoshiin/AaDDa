@@ -12,7 +12,7 @@ class MessageTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-          left: isCurrentUser ? 0 : 16, right: isCurrentUser ? 16 : 0),
+          left: isCurrentUser ? 56 : 16, right: isCurrentUser ? 16 : 56),
       margin: EdgeInsets.symmetric(vertical: 8),
       width: MediaQuery.of(context).size.width,
       alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,

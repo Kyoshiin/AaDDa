@@ -94,7 +94,7 @@ class LoginScreen extends StatelessWidget {
                         onPressed: () => checkSignIn(context),
                         height: 40,
                         minWidth: 200,
-                        color: AccentColour,
+                        color: ButtonColour,
                         child: Text(
                           'Login',
                           style: TextStyle(color: Colors.white, fontSize: 16),

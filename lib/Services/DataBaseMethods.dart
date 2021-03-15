@@ -71,6 +71,18 @@ class DataBaseMethods {
         .snapshots(); // getting stream of data
   }
 
+  ///for getting last msg
+  // static getConversationMessages(
+  //     {String currentUserID, String receiverUserID}) async {
+  //   return await FirebaseFirestore.instance
+  //       .collection("Chats")
+  //       .doc(getChatID(currentUserID, receiverUserID))
+  //       .collection("Chat_Messages")
+  //       .orderBy('time', descending: false)
+  //       .limitToLast(1)
+  //       .snapshots(); // getting stream of data
+  // }
+
   ///Method to get lists of contacts
   // static getContacts({String currentUserID}) async {
   //   return await FirebaseFirestore.instance
@@ -139,26 +151,32 @@ class DataBaseMethods {
       {List<String> MsgList,
       String currentUserID,
       String receiverUserID}) async {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
     return await FirebaseFirestore.instance
         .collection("Chats")
         .doc(getChatID(currentUserID, receiverUserID))
         .collection("Chat_Messages")
-        .snapshots()
-        .forEach((element) {
-      for (QueryDocumentSnapshot snapshot in element.docs) {
-        if (MsgList.contains(snapshot.id))
-          snapshot.reference.delete().then((v) {
-            return true;
-          });
-      }
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((document) {
+        if (MsgList.contains(document.id)) batch.delete(document.reference);
+      });
+
+      return batch.commit();
     });
 
-    // .then((value) {
-    //   print("delMsg success");
-    //   return true;
-    // }).catchError((e) {
-    //   EasyLoading.showError("Failed to delete message");
-    //   return false;
+    // return await FirebaseFirestore.instance
+    //    .collection("Chats")
+    //    .doc(getChatID(currentUserID, receiverUserID))
+    //    .collection("Chat_Messages")
+    //    .get()
+    //     .then((element){
+    //     for (QueryDocumentSnapshot snapshot in element.docs) {
+    //       if (MsgList.contains(snapshot.id))
+    //         snapshot.reference.delete();
+    //     }
+    //     return true;
     // });
   }
 }

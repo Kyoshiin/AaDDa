@@ -4,7 +4,6 @@ import 'package:aadda/Screens/LoginScreen.dart';
 import 'package:aadda/Screens/ProfileScreen.dart';
 import 'package:aadda/Services/DataBaseMethods.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'file:///F:/AndroidStudioProjects/Professional_proj/aadda/lib/Services/SessionManagement.dart';
 
@@ -68,13 +67,13 @@ class _UserListScreenState extends State<UserListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.light,
         title: Text('AaDDa', style: HeadingTextStyle),
-        backgroundColor: Colors.grey.shade900,
+        backgroundColor: PrimaryColour,
+        //ButtonColour.withOpacity(0.3),
         elevation: 0.0,
         actions: [
           PopupMenuButton(
-              //TODO: HOW?
+              color: Colors.blueGrey.shade800,
               onSelected: handleClick,
               itemBuilder: (context) {
                 return {'Profile', 'Logout'}.map((String choice) {
@@ -89,7 +88,7 @@ class _UserListScreenState extends State<UserListScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.grey.shade900,
+        backgroundColor: ButtonColour,
         child: Icon(Icons.search),
         onPressed: () {
           Navigator.push(

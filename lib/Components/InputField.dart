@@ -11,6 +11,7 @@ class InputField extends StatelessWidget {
       this.hideText = false,
       this.inputType});
 
+  //remove highlight
   final TextEditingController controller;
   final Icon icon;
   final String hintText;
@@ -32,13 +33,13 @@ class InputField extends StatelessWidget {
         labelStyle: InputTextStyle.copyWith(color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.white,
-          ),
+            // color: Colors.white,
+              ),
           borderRadius: BorderRadius.circular(16),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.blue,
+            color: ButtonColour,
           ),
           borderRadius: BorderRadius.circular(16),
         ),

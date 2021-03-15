@@ -28,7 +28,6 @@ class ContactsTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Container(
-            // decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 1,color: SecondaryColour)),),
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             child: Row(
               children: [

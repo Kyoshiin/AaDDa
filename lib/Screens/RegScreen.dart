@@ -136,7 +136,7 @@ class _RegScreenState extends State<RegScreen> {
                           onPressed: () => registerAccount(context),
                           height: 40,
                           minWidth: 200,
-                          color: AccentColour,
+                          color: ButtonColour,
                           child: Text(
                             'Register',
                             style: TextStyle(color: Colors.white, fontSize: 16),

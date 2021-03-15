@@ -113,7 +113,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           ?
           //when item selected
           AppBar(
-              backgroundColor: Colors.grey.shade900,
+              backgroundColor: PrimaryColour,
               title: Text(_selectedMessages.length < 1
                   ? "Multi Selection"
                   : "${_selectedMessages.length} selected"),
@@ -121,7 +121,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 InkWell(
                     splashColor: Colors.transparent,
                     onTap: () {
-                      //todo: manage del call back
                       delPrompt
                           ? DataBaseMethods.deleteMessages(
                                   MsgList: _selectedMessages,
@@ -150,7 +149,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
             )
           : AppBar(
               // when no selection
-              leadingWidth: 20,
+        leadingWidth: 30,
               title: Row(
                 children: [
                   ProfileImageView(
@@ -163,7 +162,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   Text(widget.receivingUser.userName, style: MediumTextStyle),
                 ],
               ),
-              backgroundColor: Colors.grey.shade900,
+              backgroundColor: PrimaryColour,
               elevation: 0.0,
               actions: [],
             ),
@@ -186,11 +185,15 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       children: [
                         Expanded(
                             child: TextField(
+                          keyboardType: TextInputType.multiline,
+                          minLines: 1,
+                          maxLines: 10,
                           controller: messageController,
                           style: InputTextStyle,
                           decoration: InputDecoration(
                               hintText: "Message...",
-                              hintStyle: InputTextStyle,
+                              hintStyle:
+                                  InputTextStyle.copyWith(color: Colors.grey),
                               focusedBorder: InputBorder.none,
                               border: InputBorder.none),
                         )),
@@ -204,14 +207,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               height: 40,
                               width: 40,
                               decoration: BoxDecoration(
-                                  gradient: LinearGradient(colors: [
-                                    Colors.grey.shade600,
-                                    Colors.grey.shade900
-                                  ]),
+                                  // gradient: LinearGradient(colors: [
+                                  //   Colors.grey.shade600,
+                                  //   Colors.grey.shade900
+                                  // ]),
+                                  color: ButtonColour,
                                   borderRadius: BorderRadius.circular(40)),
                               child: IconButton(
                                   icon: Icon(
                                     Icons.send,
+                                    size: 20,
                                     color: Colors.white,
                                   ),
                                   onPressed: null)),

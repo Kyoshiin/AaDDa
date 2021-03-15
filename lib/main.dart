@@ -1,5 +1,4 @@
 import 'package:aadda/Constants.dart';
-import 'package:aadda/Screens/ConversationScreen.dart';
 import 'package:aadda/Screens/LoginScreen.dart';
 import 'package:aadda/Screens/RegScreen.dart';
 import 'package:aadda/Screens/SplashScreen.dart';
@@ -40,9 +39,8 @@ class AaDDa extends StatelessWidget {
             title: 'AaDDa',
             builder: EasyLoading.init(),
             theme: ThemeData(
-              primaryColor: AccentColour,
-              canvasColor: Colors.black12,
-              cardColor: Colors.grey.shade900,
+              primaryColor: PrimaryColour,
+              canvasColor: BackgroundColour,
             ),
             debugShowCheckedModeBanner: false,
             initialRoute: '/',
@@ -50,9 +48,6 @@ class AaDDa extends StatelessWidget {
               '/': (context) => SplashScreen(),
               LoginScreen.ID: (context) => LoginScreen(),
               RegScreen.ID: (context) => RegScreen(),
-              // ChatListScreen.ID: (context) => ChatListScreen(),
-              // SearchContacts.ID: (context) => SearchContacts(),
-              ConversationScreen.ID: (context) => ConversationScreen()
             },
           );
 
