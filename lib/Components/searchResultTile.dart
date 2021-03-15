@@ -1,13 +1,12 @@
-import 'package:aadda/Modal/UserModal.dart';
+import 'package:aadda/Model/UserModel.dart';
 import 'package:aadda/Screens/ConversationScreen.dart';
-import 'package:aadda/Services/DataBaseMethods.dart';
 import 'package:flutter/material.dart';
 
 import '../Constants.dart';
 
 /// SearchTile widget
 class SearchTile extends StatelessWidget {
-  final UserModal receivingUser, currentUser;
+  final UserModel receivingUser, currentUser;
 
   SearchTile({@required this.currentUser, @required this.receivingUser});
 
@@ -41,8 +40,8 @@ class SearchTile extends StatelessWidget {
               onTap: () {
                 ///create contact for showing in contactScreen
                 ///and move to chatScreen
-                DataBaseMethods.createContact(
-                    receiver: receivingUser, sender: currentUser);
+                // DataBaseMethods.createContact(
+                //     receiver: receivingUser, sender: currentUser);
 
                 Navigator.pushReplacement(
                     context,

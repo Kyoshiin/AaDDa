@@ -1,19 +1,20 @@
 import 'package:aadda/Components/ContactsTile.dart';
-import 'package:aadda/Modal/UserModal.dart';
+import 'package:aadda/Model/UserModel.dart';
 import 'package:aadda/Screens/LoginScreen.dart';
 import 'package:aadda/Screens/ProfileScreen.dart';
-import 'package:aadda/Screens/SearchContacts.dart';
 import 'package:aadda/Services/DataBaseMethods.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'file:///F:/AndroidStudioProjects/Professional_proj/aadda/lib/Services/SessionManagement.dart';
 
 import '../Constants.dart';
+import 'SearchUsers.dart';
 
 class UserListScreen extends StatefulWidget {
   static const ID = "ContactListScreen";
 
-  UserModal currentUser;
+  UserModel currentUser;
 
   UserListScreen({this.currentUser});
 
@@ -34,14 +35,12 @@ class _UserListScreenState extends State<UserListScreen> {
                 itemBuilder: (context, index) {
                   if (widget.currentUser.userID !=
                       snapshot.data.docs[index].id) {
-                    UserModal receiver = UserModal(
+                    UserModel receiver = UserModel(
                         userID: snapshot.data.docs[index].id,
                         userName: snapshot.data.docs[index].data()['username'],
                         userPic: snapshot.data.docs[index].data()['userphoto'],
                         userEmail: snapshot.data.docs[index].data()['email'],
                         userAbout: snapshot.data.docs[index].data()['about']);
-
-                    print("receiverName ${snapshot.data.docs[index].id}");
 
                     return ContactsTile(
                       receiverUser: receiver,
@@ -69,6 +68,7 @@ class _UserListScreenState extends State<UserListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.light,
         title: Text('AaDDa', style: HeadingTextStyle),
         backgroundColor: Colors.grey.shade900,
         elevation: 0.0,
@@ -95,7 +95,7 @@ class _UserListScreenState extends State<UserListScreen> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => SearchContacts(
+                  builder: (context) => SearchUsers(
                         currentUser: widget.currentUser,
                       ))); // widget -> cuz in state class
         },
@@ -125,6 +125,8 @@ class _UserListScreenState extends State<UserListScreen> {
 }
 
 //todo: find a good way to show only contacts with their details
+
+//todo: if going by UserList approach, send userStream for searching, instead of calling db
 
 ///Implementation based on each user will have access to only the contacts he has texted {TBT}
 // class _ContactListScreenState extends State<ContactListScreen> {
@@ -177,7 +179,7 @@ class _UserListScreenState extends State<UserListScreen> {
 //         elevation: 0.0,
 //         actions: [
 //           PopupMenuButton(
-//             //TODO: HOW?
+//
 //               onSelected: handleClick,
 //               itemBuilder: (context) {
 //                 return {'Profile', 'Logout'}.map((String choice) {

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:aadda/Modal/UserModal.dart';
+import 'package:aadda/Model/UserModel.dart';
 import 'package:aadda/Screens/LoginScreen.dart';
 import 'package:aadda/Services/SessionManagement.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  Future<UserModal> _currentUser;
+  Future<UserModel> _currentUser;
 
   @override
   void initState() {
@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
           //when incomplete
           return Scaffold(
             body: Container(
-              color: Colors.deepPurple,
+              // color: AccentColour,
               child: Center(
                 child: Image.asset("res/logos/AaDDa-logos_transparent.png"),
               ),
@@ -42,13 +42,13 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void startCount() async {
-    UserModal user;
+    UserModel user;
     bool isLoggedIn;
     SessionManagement.IsLoggedIn().then((value) {
       isLoggedIn = value;
       if (value == true) {
         SessionManagement.getUserData().then((map) {
-          user = UserModal(
+          user = UserModel(
               userEmail: map[SessionManagement.USER_EMAIL_KEY],
               userName: map[SessionManagement.USER_NAME_KEY],
               userID: map[SessionManagement.USER_ID_KEY],

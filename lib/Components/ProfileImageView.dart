@@ -1,11 +1,11 @@
-import 'package:aadda/Modal/UserModal.dart';
+import 'package:aadda/Model/UserModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../Constants.dart';
 
 class ProfileImageView extends StatelessWidget {
-  final UserModal user;
+  final UserModel user;
   final double viewSize;
 
   const ProfileImageView({this.user, this.viewSize});
@@ -41,8 +41,7 @@ class ProfileImageView extends StatelessWidget {
             width: viewSize,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                color: Colors.blue.shade700,
-                borderRadius: BorderRadius.circular(40)),
+                color: AccentColour, borderRadius: BorderRadius.circular(40)),
             child: Text(
               user.userName.substring(0, 1).toUpperCase(),
               style: MediumTextStyle,

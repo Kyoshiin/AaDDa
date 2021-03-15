@@ -1,4 +1,4 @@
-import 'package:aadda/Modal/UserModal.dart';
+import 'package:aadda/Model/UserModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,7 +23,7 @@ class DataBaseMethods {
 
   ///method to create an entry in ContactList for both the Users
 
-  static createContact({UserModal receiver, UserModal sender}) async {
+  static createContact({UserModel receiver, UserModel sender}) async {
     ///creating contact for sender
     FirebaseFirestore.instance
         .collection("Users")
@@ -67,7 +67,7 @@ class DataBaseMethods {
         .collection("Chats")
         .doc(getChatID(currentUserID, receiverUserID))
         .collection("Chat_Messages")
-        .orderBy('time', descending: false)
+        .orderBy('time', descending: true)
         .snapshots(); // getting stream of data
   }
 
@@ -84,6 +84,7 @@ class DataBaseMethods {
   static getUsers() async {
     return await FirebaseFirestore.instance
         .collection("Users")
+        .orderBy('username', descending: false)
         .snapshots(); // getting stream of data
   }
 
@@ -118,7 +119,7 @@ class DataBaseMethods {
     });
   }
 
-  static updateUserDetails(UserModal user) async {
+  static updateUserDetails(UserModel user) async {
     return await FirebaseFirestore.instance
         .collection("Users")
         .doc(user.userID)
@@ -132,5 +133,32 @@ class DataBaseMethods {
     }).catchError((e) {
       return false;
     });
+  }
+
+  static deleteMessages(
+      {List<String> MsgList,
+      String currentUserID,
+      String receiverUserID}) async {
+    return await FirebaseFirestore.instance
+        .collection("Chats")
+        .doc(getChatID(currentUserID, receiverUserID))
+        .collection("Chat_Messages")
+        .snapshots()
+        .forEach((element) {
+      for (QueryDocumentSnapshot snapshot in element.docs) {
+        if (MsgList.contains(snapshot.id))
+          snapshot.reference.delete().then((v) {
+            return true;
+          });
+      }
+    });
+
+    // .then((value) {
+    //   print("delMsg success");
+    //   return true;
+    // }).catchError((e) {
+    //   EasyLoading.showError("Failed to delete message");
+    //   return false;
+    // });
   }
 }

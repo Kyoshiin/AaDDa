@@ -1,47 +1,71 @@
-import 'package:aadda/Modal/UserModal.dart';
+import 'package:aadda/Model/UserModel.dart';
 import 'package:aadda/Screens/ConversationScreen.dart';
 import 'package:aadda/Services/DataBaseMethods.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../Constants.dart';
-import '../Modal/UserModal.dart';
 import '../Services/DataBaseMethods.dart';
 import 'ProfileImageView.dart';
 
 class ContactsTile extends StatelessWidget {
-  UserModal receiverUser, currentUser;
+  UserModel receiverUser, currentUser;
 
   ContactsTile({this.receiverUser, this.currentUser});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
-        //todo : https://pub.dev/packages/cached_network_image/example
-
         EasyLoading.show(status: 'Loading...');
 
         ///getReceiverUser details and move to Conversation Screen
         getReceiverUserDetails(context, receiverUser.userID);
       },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          children: [
-            ProfileImageView(
-              user: receiverUser,
-              viewSize: 50,
+      child: Column(
+        // for divider
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(
+            // decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 1,color: SecondaryColour)),),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            child: Row(
+              children: [
+                ProfileImageView(
+                  user: receiverUser,
+                  viewSize: 50,
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      receiverUser.userName,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 16),
+                    ),
+                    Text(
+                      receiverUser.userAbout,
+                      style: TextStyle(color: Colors.grey, fontSize: 16),
+                    ),
+                  ],
+                )
+              ],
             ),
-            SizedBox(
-              width: 8,
+          ),
+          SizedBox(
+            width: 240,
+            child: Divider(
+              color: SecondaryColour,
+              thickness: 1,
             ),
-            Text(
-              receiverUser.userName,
-              style: BodyTextStyle,
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
@@ -51,7 +75,7 @@ class ContactsTile extends StatelessWidget {
     DataBaseMethods.getUserDetails(
             userID: receiverUserID) // getting logged in User details
         .then((documentSnapshot) {
-      receiverUser = UserModal(
+      receiverUser = UserModel(
           userID: receiverUserID,
           userEmail: documentSnapshot.data()['email'].toString(),
           userName: documentSnapshot.data()['username'].toString(),

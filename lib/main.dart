@@ -1,3 +1,4 @@
+import 'package:aadda/Constants.dart';
 import 'package:aadda/Screens/ConversationScreen.dart';
 import 'package:aadda/Screens/LoginScreen.dart';
 import 'package:aadda/Screens/RegScreen.dart';
@@ -10,6 +11,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized(); // server attached to app
   runApp(AaDDa());
 
+  //todo: manage internet connectivity
   //loading dialog
   EasyLoading.instance
     ..displayDuration = Duration(seconds: 5)
@@ -38,7 +40,7 @@ class AaDDa extends StatelessWidget {
             title: 'AaDDa',
             builder: EasyLoading.init(),
             theme: ThemeData(
-              primaryColor: Colors.blue,
+              primaryColor: AccentColour,
               canvasColor: Colors.black12,
               cardColor: Colors.grey.shade900,
             ),

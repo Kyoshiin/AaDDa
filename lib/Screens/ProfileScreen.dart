@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:aadda/Components/InputField.dart';
-import 'package:aadda/Modal/UserModal.dart';
+import 'package:aadda/Model/UserModel.dart';
 import 'package:aadda/Services/DataBaseMethods.dart';
 import 'package:aadda/Services/SessionManagement.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -13,7 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import '../Constants.dart';
 
 class ProfileScreen extends StatefulWidget {
-  UserModal user;
+  UserModel user;
 
   ProfileScreen({this.user});
 
@@ -164,14 +164,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onPressed: () => updateUserDetails(),
                         height: 40,
                         minWidth: 200,
-                        color: Colors.blue,
+                        color: AccentColour,
                         child: Text(
                           'Update',
                           style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
-                            side: BorderSide(width: 3, color: Colors.blue)),
+                            side: BorderSide(width: 3, color: AccentColour)),
                       ),
                     ],
                   ),

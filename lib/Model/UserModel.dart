@@ -1,11 +1,11 @@
-class UserModal {
+class UserModel {
   String userID;
   String userName;
   String userEmail;
   String userPic;
   String userAbout;
 
-  UserModal(
+  UserModel(
       {this.userID,
       this.userName,
       this.userEmail,

@@ -136,15 +136,14 @@ class _RegScreenState extends State<RegScreen> {
                           onPressed: () => registerAccount(context),
                           height: 40,
                           minWidth: 200,
-                          color: Colors.deepPurple,
+                          color: AccentColour,
                           child: Text(
                             'Register',
                             style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
-                              side: BorderSide(
-                                  width: 3, color: Colors.deepPurple)),
+                              side: BorderSide(width: 3, color: AccentColour)),
                         ),
                       ],
                     ),
@@ -228,7 +227,7 @@ class _RegScreenState extends State<RegScreen> {
     users.doc(docID).set({
       'email': _emailcontroller.text,
       'username': _userNamecontroller.text,
-      'about': "Hey there! Lets have an Aadda..",
+      'about': "Hey there! Let's have an Aadda..",
       'userphoto': ""
     }).then((value) {
       EasyLoading.dismiss();

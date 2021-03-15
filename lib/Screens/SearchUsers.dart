@@ -1,5 +1,5 @@
 import 'package:aadda/Components/searchResultTile.dart';
-import 'package:aadda/Modal/UserModal.dart';
+import 'package:aadda/Model/UserModel.dart';
 import 'package:aadda/Services/DataBaseMethods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -7,21 +7,21 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../Constants.dart';
 
-class SearchContacts extends StatefulWidget {
+class SearchUsers extends StatefulWidget {
   static const ID = "ContactList";
 
-  UserModal currentUser;
+  UserModel currentUser;
 
-  SearchContacts({this.currentUser});
+  SearchUsers({this.currentUser});
 
   @override
-  _SearchContactsState createState() => _SearchContactsState();
+  _SearchUsersState createState() => _SearchUsersState();
 }
 
-class _SearchContactsState extends State<SearchContacts> {
+class _SearchUsersState extends State<SearchUsers> {
   TextEditingController searchUserController = TextEditingController();
   QuerySnapshot searchResultSnapshot;
-  UserModal receiverUser;
+  UserModel receiverUser;
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +110,7 @@ class _SearchContactsState extends State<SearchContacts> {
             itemBuilder: (context, index) {
               if (widget.currentUser.userID !=
                   searchResultSnapshot.docs[index].id) {
-                receiverUser = UserModal(
+                receiverUser = UserModel(
                     userEmail: searchResultSnapshot.docs[index].data()['email'],
                     userName:
                         searchResultSnapshot.docs[index].data()["username"],
@@ -151,7 +151,7 @@ class _SearchContactsState extends State<SearchContacts> {
 
 //
 // import 'package:aadda/Components/searchResultTile.dart';
-// import 'package:aadda/Modal/UserModal.dart';
+// import 'package:aadda/Modal/UserModel.dart';
 // import 'package:aadda/Services/DataBaseMethods.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:aadda/Modal/UserModal.dart';
+import 'package:aadda/Model/UserModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SessionManagement{
@@ -17,7 +17,7 @@ class SessionManagement{
         ''; // if userID not present return null
   }
 
-  static createLoginSession({UserModal user}) async {
+  static createLoginSession({UserModel user}) async {
     sharedPreferences = await SharedPreferences.getInstance();
 
     sharedPreferences.setBool(IS_LOGIN, true);
@@ -57,7 +57,7 @@ class SessionManagement{
   }
 
   ///update user details after profile upgrade
-  static updateUserDetails({UserModal user}) async {
+  static updateUserDetails({UserModel user}) async {
     sharedPreferences = await SharedPreferences.getInstance();
 
     sharedPreferences.setString(USER_NAME_KEY, user.userName);

@@ -1,13 +1,14 @@
 import 'package:aadda/Components/MessageTile.dart';
 import 'package:aadda/Components/ProfileImageView.dart';
 import 'package:aadda/Constants.dart';
-import 'package:aadda/Modal/UserModal.dart';
+import 'package:aadda/Model/UserModel.dart';
 import 'package:aadda/Services/DataBaseMethods.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ConversationScreen extends StatefulWidget {
   static const String ID = "CONVERSATION_SCREEN";
-  UserModal receivingUser, currentUser; // to whom text is send
+  UserModel receivingUser, currentUser; // to whom text is send
 
   ConversationScreen(
       {@required this.currentUser, @required this.receivingUser});
@@ -19,6 +20,10 @@ class ConversationScreen extends StatefulWidget {
 class _ConversationScreenState extends State<ConversationScreen> {
   TextEditingController messageController = TextEditingController();
   Stream chatMessagesStream;
+  List<String> _selectedMessages = List<String>();
+  bool delPrompt = false;
+
+  var _controller;
 
   @override
   void initState() {
@@ -39,13 +44,41 @@ class _ConversationScreenState extends State<ConversationScreen> {
       builder: (context, snapshot) {
         return snapshot.hasData
             ? ListView.builder(
+            reverse: true,
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
-                  return MessageTile(
-                      message: snapshot.data.docs[index].data()['message'],
-                      isCurrentUser: // check if send by current user
-                          snapshot.data.docs[index].data()['sendBy'] ==
-                              widget.currentUser.userID);
+                  String msgID = snapshot.data.docs[index].id;
+                  return GestureDetector(
+                    onLongPress: () {
+                      // for selecting msgs
+                      print("MessageID $msgID");
+                      if (!_selectedMessages.contains(msgID)) {
+                        print("List elemnts ${_selectedMessages.length}");
+                        setState(() {
+                          _selectedMessages.add(msgID);
+                        });
+                      }
+                    },
+                    onTap: () {
+                      // for deselecting
+                      if (_selectedMessages.contains(msgID)) {
+                        setState(() {
+                          _selectedMessages.remove(msgID);
+                        });
+                      }
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 2),
+                      color: (_selectedMessages.contains(msgID))
+                          ? Colors.blue.withOpacity(0.5)
+                          : Colors.transparent,
+                      child: MessageTile(
+                          message: snapshot.data.docs[index].data()['message'],
+                          isCurrentUser: // check if send by current user
+                              snapshot.data.docs[index].data()['sendBy'] ==
+                                  widget.currentUser.userID),
+                    ),
+                  );
                 })
             : Container(
                 constraints: BoxConstraints.expand(),
@@ -76,24 +109,64 @@ class _ConversationScreenState extends State<ConversationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leadingWidth: 20,
-        title: Row(
-          children: [
-            ProfileImageView(
-              user: widget.receivingUser,
-              viewSize: 40,
+      appBar: _selectedMessages.isNotEmpty
+          ?
+          //when item selected
+          AppBar(
+              backgroundColor: Colors.grey.shade900,
+              title: Text(_selectedMessages.length < 1
+                  ? "Multi Selection"
+                  : "${_selectedMessages.length} selected"),
+              actions: [
+                InkWell(
+                    splashColor: Colors.transparent,
+                    onTap: () {
+                      //todo: manage del call back
+                      delPrompt
+                          ? DataBaseMethods.deleteMessages(
+                                  MsgList: _selectedMessages,
+                                  currentUserID: widget.currentUser.userID,
+                                  receiverUserID: widget.receivingUser.userID)
+                              .then((success) {
+                              print(
+                                  "in conv delMsg $success ${_selectedMessages.length}");
+
+                              setState(() {
+                                _selectedMessages.clear();
+                              });
+                            })
+                          : EasyLoading.showInfo(
+                              "Messages will be permanently deleted for both users",
+                              duration: Duration(seconds: 2));
+                      setState(() {
+                        delPrompt = !delPrompt;
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: Icon(Icons.delete),
+                    ))
+              ],
+            )
+          : AppBar(
+              // when no selection
+              leadingWidth: 20,
+              title: Row(
+                children: [
+                  ProfileImageView(
+                    user: widget.receivingUser,
+                    viewSize: 40,
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Text(widget.receivingUser.userName, style: MediumTextStyle),
+                ],
+              ),
+              backgroundColor: Colors.grey.shade900,
+              elevation: 0.0,
+              actions: [],
             ),
-            SizedBox(
-              width: 8,
-            ),
-            Text(widget.receivingUser.userName, style: MediumTextStyle),
-          ],
-        ),
-        backgroundColor: Colors.grey.shade900,
-        elevation: 0.0,
-        actions: [],
-      ),
       body: SafeArea(
         child: Container(
           child: Column(
