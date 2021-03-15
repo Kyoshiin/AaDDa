@@ -10,18 +10,18 @@ import 'file:///F:/AndroidStudioProjects/Professional_proj/aadda/lib/Services/Se
 import '../Constants.dart';
 import 'SearchUsers.dart';
 
-class UserListScreen extends StatefulWidget {
+class ContactListScreen extends StatefulWidget {
   static const ID = "ContactListScreen";
 
   UserModel currentUser;
 
-  UserListScreen({this.currentUser});
+  ContactListScreen({this.currentUser});
 
   @override
-  _UserListScreenState createState() => _UserListScreenState();
+  _ContactListScreenState createState() => _ContactListScreenState();
 }
 
-class _UserListScreenState extends State<UserListScreen> {
+class _ContactListScreenState extends State<ContactListScreen> {
   Stream usersStream;
 
   Widget chatsList() {

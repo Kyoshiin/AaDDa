@@ -63,10 +63,7 @@ class _SearchUsersState extends State<SearchUsers> {
                               height: 40,
                               width: 40,
                               decoration: BoxDecoration(
-                                  gradient: LinearGradient(colors: [
-                                    Colors.grey.shade600,
-                                    Colors.grey.shade900
-                                  ]),
+                                  color: ButtonColour,
                                   borderRadius: BorderRadius.circular(40)),
                               child: IconButton(
                                   icon: Icon(
@@ -111,11 +108,14 @@ class _SearchUsersState extends State<SearchUsers> {
               if (widget.currentUser.userID !=
                   searchResultSnapshot.docs[index].id) {
                 receiverUser = UserModel(
-                    userEmail: searchResultSnapshot.docs[index].data()['email'],
-                    userName:
-                        searchResultSnapshot.docs[index].data()["username"],
                     userID: searchResultSnapshot.docs[index].id,
-                    userPic: '');
+                    userName:
+                        searchResultSnapshot.docs[index].data()['username'],
+                    userPic:
+                        searchResultSnapshot.docs[index].data()['userphoto'],
+                    userEmail: searchResultSnapshot.docs[index].data()['email'],
+                    userAbout:
+                        searchResultSnapshot.docs[index].data()['about']);
 
                 return SearchTile(
                     // sending search result users data
@@ -123,7 +123,7 @@ class _SearchUsersState extends State<SearchUsers> {
                     currentUser: widget.currentUser);
               }
               return Center(
-                // if user ID same
+                  // if user ID same
                   child: Text(
                 "No Results Found",
                 style: BodyTextStyle,

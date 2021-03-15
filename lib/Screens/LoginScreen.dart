@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-import 'UserListScreen.dart';
+import 'ContactListScreen.dart';
 
 class LoginScreen extends StatelessWidget {
   static const ID = "LoginScreen";
@@ -173,7 +173,7 @@ class LoginScreen extends StatelessWidget {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => UserListScreen(
+                      builder: (context) => ContactListScreen(
                             currentUser: currentUser,
                           )));
 
