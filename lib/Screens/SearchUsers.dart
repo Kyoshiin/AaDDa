@@ -111,11 +111,14 @@ class _SearchUsersState extends State<SearchUsers> {
               if (widget.currentUser.userID !=
                   searchResultSnapshot.docs[index].id) {
                 receiverUser = UserModel(
-                    userEmail: searchResultSnapshot.docs[index].data()['email'],
-                    userName:
-                        searchResultSnapshot.docs[index].data()["username"],
                     userID: searchResultSnapshot.docs[index].id,
-                    userPic: '');
+                    userName:
+                        searchResultSnapshot.docs[index].data()['username'],
+                    userPic:
+                        searchResultSnapshot.docs[index].data()['userphoto'],
+                    userEmail: searchResultSnapshot.docs[index].data()['email'],
+                    userAbout:
+                        searchResultSnapshot.docs[index].data()['about']);
 
                 return SearchTile(
                     // sending search result users data
