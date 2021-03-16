@@ -53,7 +53,8 @@ class _SplashScreenState extends State<SplashScreen> {
               userName: map[SessionManagement.USER_NAME_KEY],
               userID: map[SessionManagement.USER_ID_KEY],
               userAbout: map[SessionManagement.USER_ABOUT_KEY],
-              userPic: map[SessionManagement.USER_PIC_KEY]);
+              userPic: map[SessionManagement.USER_PIC_KEY],
+              contactList: map[SessionManagement.USER_CONTACTS_KEY] ?? []);
           print(
               "About ${map[SessionManagement.USER_ABOUT_KEY]}, ${map[SessionManagement.USER_EMAIL_KEY]}");
         });

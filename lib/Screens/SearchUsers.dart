@@ -114,8 +114,9 @@ class _SearchUsersState extends State<SearchUsers> {
                     userPic:
                         searchResultSnapshot.docs[index].data()['userphoto'],
                     userEmail: searchResultSnapshot.docs[index].data()['email'],
-                    userAbout:
-                        searchResultSnapshot.docs[index].data()['about']);
+                    userAbout: searchResultSnapshot.docs[index].data()['about'],
+                    contactList:
+                        searchResultSnapshot.docs[index].data()['ContactList']);
 
                 return SearchTile(
                     // sending search result users data

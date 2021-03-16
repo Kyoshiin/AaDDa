@@ -8,6 +8,7 @@ class SessionManagement{
   static const USER_EMAIL_KEY = "USER_EMAIL";
   static const USER_ABOUT_KEY = "USER_ABOUT";
   static const USER_PIC_KEY = "USER_PIC";
+  static const USER_CONTACTS_KEY = "USER_CONTACTS";
 
   static SharedPreferences sharedPreferences;
 
@@ -26,6 +27,7 @@ class SessionManagement{
     sharedPreferences.setString(USER_EMAIL_KEY, user.userEmail);
     sharedPreferences.setString(USER_ABOUT_KEY, user.userAbout);
     sharedPreferences.setString(USER_PIC_KEY, user.userPic);
+    sharedPreferences.setStringList(USER_CONTACTS_KEY, user.contactList);
   }
 
   static logout() async {
@@ -35,6 +37,9 @@ class SessionManagement{
     sharedPreferences.setString(USER_NAME_KEY, "");
     sharedPreferences.setString(USER_ID_KEY, "");
     sharedPreferences.setString(USER_EMAIL_KEY, "");
+    sharedPreferences.setString(USER_ABOUT_KEY, "");
+    sharedPreferences.setString(USER_PIC_KEY, "");
+    sharedPreferences.setStringList(USER_CONTACTS_KEY, []);
   }
 
   static getUserData() async {
@@ -46,6 +51,8 @@ class SessionManagement{
       USER_ID_KEY: sharedPreferences.getString(USER_ID_KEY) ?? '',
       USER_ABOUT_KEY: sharedPreferences.getString(USER_ABOUT_KEY) ?? '',
       USER_PIC_KEY: sharedPreferences.getString(USER_PIC_KEY) ?? '',
+      USER_CONTACTS_KEY:
+          sharedPreferences.getStringList(USER_CONTACTS_KEY) ?? [],
     };
 
     return userDetails;
@@ -63,5 +70,7 @@ class SessionManagement{
     sharedPreferences.setString(USER_NAME_KEY, user.userName);
     sharedPreferences.setString(USER_ABOUT_KEY, user.userAbout);
     sharedPreferences.setString(USER_PIC_KEY, user.userPic);
+
+    //todo: update user list of contacts
   }
 }

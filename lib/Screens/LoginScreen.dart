@@ -160,7 +160,9 @@ class LoginScreen extends StatelessWidget {
                   userEmail: documentSnapshot.data()['email'].toString(),
                   userName: documentSnapshot.data()['username'].toString(),
                   userAbout: documentSnapshot.data()['about'].toString(),
-                  userPic: documentSnapshot.data()['userphoto'].toString());
+                  userPic: documentSnapshot.data()['userphoto'].toString(),
+                  contactList: documentSnapshot.data()['contacts'] ??
+                      []); //todo: check name of clist
 
               print(
                   "UserPic: ${currentUser.userPic}\n UserEmail: ${currentUser.userEmail}");

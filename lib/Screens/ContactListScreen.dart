@@ -39,7 +39,12 @@ class _ContactListScreenState extends State<ContactListScreen> {
                         userName: snapshot.data.docs[index].data()['username'],
                         userPic: snapshot.data.docs[index].data()['userphoto'],
                         userEmail: snapshot.data.docs[index].data()['email'],
-                        userAbout: snapshot.data.docs[index].data()['about']);
+                        userAbout: snapshot.data.docs[index].data()['about'],
+                        contactList:
+                            snapshot.data.docs[index].data()['ContactList']);
+
+                    print(
+                        "contacts ${receiver.userName} ${receiver.contactList}");
 
                     return ContactsTile(
                       receiverUser: receiver,
@@ -91,6 +96,7 @@ class _ContactListScreenState extends State<ContactListScreen> {
         backgroundColor: ButtonColour,
         child: Icon(Icons.search),
         onPressed: () {
+          print("contacts inListt ${widget.currentUser.contactList}");
           Navigator.push(
               context,
               MaterialPageRoute(

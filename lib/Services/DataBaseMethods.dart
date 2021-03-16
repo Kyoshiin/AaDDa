@@ -25,28 +25,26 @@ class DataBaseMethods {
 
   static createContact({UserModel receiver, UserModel sender}) async {
     ///creating contact for sender
-    FirebaseFirestore.instance
-        .collection("Users")
-        .doc(sender.userID)
-        .collection("ContactList")
-        .doc(receiver.userID)
-        .set({
-      "receiverName": receiver.userName,
-      'receiverUserID': receiver.userID,
-    }).catchError(
-            (e) => print("Failed creating contact for sender " + e.toString()));
 
-    ///creating contact for receiver of sender
-    FirebaseFirestore.instance
-        .collection("Users")
-        .doc(receiver.userID)
-        .collection("ContactList")
-        .doc(sender.userID)
-        .set({
-      "receiverName": sender.userName,
-      'receiverUserID': sender.userID,
-    }).catchError((e) =>
-            print("Failed creating contact for receiver " + e.toString()));
+    //adding to each other contacts
+    print("contactsdb ${receiver.contactList} ${sender.contactList}");
+
+    receiver.contactList.add(sender.userID);
+    sender.contactList.add(receiver.userID);
+
+    print("contactsdb ${receiver.userName} ${sender.userName}");
+
+    //creating contact for receiver
+    FirebaseFirestore.instance.collection("Users").doc(sender.userID).update({
+      "contacts": sender.contactList,
+    }).catchError(
+        (e) => print("Failed creating contact for sender " + e.toString()));
+
+    //creating contact for receiver
+    FirebaseFirestore.instance.collection("Users").doc(receiver.userID).update({
+      "contacts": receiver.contactList,
+    }).catchError(
+        (e) => print("Failed creating contact for receiver " + e.toString()));
   }
 
   ///Method to start/ send conversation msgs
