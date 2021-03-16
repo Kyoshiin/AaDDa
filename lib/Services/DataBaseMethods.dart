@@ -34,6 +34,8 @@ class DataBaseMethods {
 
     print("contactsdb ${receiver.userName} ${sender.userName}");
 
+    //todo: use arrayUnion
+
     //creating contact for receiver
     FirebaseFirestore.instance.collection("Users").doc(sender.userID).update({
       "contacts": sender.contactList,
